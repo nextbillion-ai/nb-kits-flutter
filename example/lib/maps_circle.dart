@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_kits_flutter/nb_kits_flutter.dart';
 import 'package:nb_maps_flutter/nb_maps_flutter.dart';
@@ -63,34 +62,26 @@ class MapsCircleState extends State<MapsCircle> {
     });
   }
 
-  Future<List<LatLng>?> convertTurfPointsToPoints(
-      TurfPoint center, double radius,
-      {int steps = 128}) async {
-    List<TurfPoint>? turfPoints =
-        await TurfTransformation.circle(center, radius, steps: steps);
-    return turfPoints
-        ?.map((turfPoint) => LatLng(turfPoint.latitude, turfPoint.longitude))
-        .toList();
-  }
-
   void _add() async {
     List<TurfPoint>? turfPoints =
-        await TurfTransformation.circle(const TurfPoint(-33.852, 151.211), 50);
+        await TurfTransformation.circle(const TurfPoint(-33.852, 151.211), 50,steps: 128);
     List<LatLng>? geometry = turfPoints
         ?.map((turfPoint) => LatLng(turfPoint.latitude, turfPoint.longitude))
         .toList();
-    mapController!.addFill(
-      FillOptions(
-        geometry: [geometry!],
-        fillOpacity: 0.5,
-        fillColor: "#FF0000",
-        fillOutlineColor: "#00FF00",
-      ),
-    );
+    if (geometry != null) {
+      mapController!.addFill(
+        FillOptions(
+          geometry: [geometry],
+          fillOpacity: 0.5,
+          fillColor: "#FF0000",
+          fillOutlineColor: "#00FF00",
+        ),
+      );
 
-    setState(() {
-      _fillCount += 1;
-    });
+      setState(() {
+        _fillCount += 1;
+      });
+    }
   }
 
   void _remove() {
